@@ -2,7 +2,7 @@
 # Google Cloud SDK fzf helper functions
 # ==========================================================================
 {
-export GCLOUD_CMD_CACHE_DB="$HOME/.gcloud_cmd_cache.db"
+export GCLOUD_CMD_CACHE_DB="$HOME/.fzf-gcloud-cmd_cache.db"
 
 __gcloud_cmd_cache() {
   # ==========================================================================

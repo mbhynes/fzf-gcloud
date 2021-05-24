@@ -22,10 +22,18 @@ curl https://raw.githubusercontent.com/mbhynes/fzf-gcloud/main/fzf-gcloud.plugin
 ```zsh
 [ -f ~/.fzf-gcloud.plugin.zsh ] && source ~/.fzf-gcloud.plugin.zsh
 ```
-### zsh Packge Manager Installation
-Something like this probably works?
+### Antigen
+Please note that the branch to checkout is `main`, which must be specified in the `antigen` invocation (see [antigen bundle](https://github.com/zsh-users/antigen/wiki/Commands#antigen-bundle) for more details):
+```
+antigen bundle 'mbhynes/fzf-gcloud' --branch=main
+```
+
+### Other Packge Manager Installation
+Please note that since there is no `master` branch for this repository (we use `main`), the some default load commands for popular zsh package managers will fail. Antigen supports providing an optional branch to `antigen bundle` and has good documentation, so it's the recommended package manager for installing `fzf-gcloud`.
+
+Something like the below may work? ... YMMV.
 ```zsh
-zgen load 'mbhynes/fzf-gcloud'
+zgen load 'mbhynes/fzf-gcloud' 'main'
 ```
 
 ### Usage
