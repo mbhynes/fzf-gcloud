@@ -16,11 +16,11 @@ It adds a keybinding on `CTRL-P` to browse the currently installed `gcloud` CLI 
 ### Manual Installation
 1. Download the shell functions from this repo:
 ```zsh
-curl https://raw.githubusercontent.com/mbhynes/fzf-gcloud/main/gcloud-fzf.zsh > $HOME/.fzf-gcloud.zsh
+curl https://raw.githubusercontent.com/mbhynes/fzf-gcloud/main/fzf-gcloud.plugin.zsh > $HOME/.fzf-gcloud.plugin.zsh
 ```
 2. Add the following lines in your `~/.zshrc` to source the functions to source them:
 ```zsh
-[ -f ~/.fzf-gcloud.zsh ] && source ~/.fzf-gcloud.zsh
+[ -f ~/.fzf-gcloud.plugin.zsh ] && source ~/.fzf-gcloud.plugin.zsh
 ```
 ### zsh Packge Manager Installation
 Something like this probably works?
