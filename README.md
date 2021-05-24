@@ -27,6 +27,18 @@ Please note that the branch to checkout is `main`, which must be specified in th
 ```
 antigen bundle 'mbhynes/fzf-gcloud' --branch=main
 ```
+The first time you use `CTRL-P`, the `gcloud` command cache will be populated. 
+
+Don't panic. 
+
+You will be greeted by a wall of logging messages like those below for about a minute, after which you may use `fzf-gcloud` without having to repopulate the cache.
+```
+Adding invocation for 'gcloud beta sql import bak' (build from /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/lib/surface/sql/import/bak.py)
+Adding invocation for 'gcloud beta sql import csv' (build from /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/lib/surface/sql/import/csv.py)
+Adding invocation for 'gcloud beta sql import sql' (build from /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/lib/surface/sql/import/sql.py)
+Adding invocation for 'gcloud beta sql backups delete' (build from /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/lib/surface/sql/backups/delete.py)
+Adding invocation for 'gcloud beta sql backups describe' (build from /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/lib/surface/sql/backups/describe.py)
+```
 
 ### Other Packge Manager Installation
 Please note that since there is no `master` branch for this repository (we use `main`), the some default load commands for popular zsh package managers will fail. Antigen supports providing an optional branch to `antigen bundle` and has good documentation, so it's the recommended package manager for installing `fzf-gcloud`.
@@ -38,7 +50,8 @@ zgen load 'mbhynes/fzf-gcloud' 'main'
 
 ### Usage
 - The widget is by default bound to the keybinding `CTRL-P` (`'^P'`)
-- You can alter this by changing the `bindkey` line in the `.fzf-gcloud.zsh` file (or whatever you named it), as noted below:
+- You can alter this by changing the `bindkey` line in the `.fzf-gcloud.plugin.zsh` or `~/.antigen/bundles/mbhynes/fzf-gcloud-main/fzf-gcloud.plugin.zsh` (or wherever you've placed it in your system), as noted below:
+
 ```zsh
 fzf-gcloud-widget() {
   # ==========================================================================
@@ -53,10 +66,10 @@ zle     -N   fzf-gcloud-widget
 bindkey '^P' fzf-gcloud-widget # <--- change if you prefer a different keybinding
 ```
 
-## Implementation
+## Implementation Details
 
-### Summary
-The `gcloud` completion mechanism works in the following way:
+### Implementation Summary
+The `fzf-gcloud` completion mechanism works in the following way:
 - we create a local cache (`sqlite` database) of `gcloud` commands for use with `fzf`
 - when the keybinding is invoked, the commands in this cache are piped into `fzf` with a `--preview` option to display each command's `--help` docs
 
@@ -84,10 +97,31 @@ sqlite3 $HOME/.gcloud_cmd_cache.db "select * from gcloud_cmd_cache where gcloud_
 /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/lib/surface/admin_service_cluster/__init__.py|gcloud alpha admin-service-cluster
 ```
 
-Please note: there's probably a better way to do this. But this works, is very directly understandable, and only takes about a minute to populate ¯\_(ツ)_/¯.
+Please note: there's probably a better way to do this. But this works, is very directly understandable, and only takes about a minute to populate `¯\_(ツ)_/¯`.
 
 ### Updating the Cache
 There's no magic here. After sourcing the functions, just re-run:
 ```zsh
 __gcloud_cmd_cache
 ```
+
+## Uninstalling `fzf-gcloud`
+
+### Manual Uninstallation
+If you installed this plugin manually, please use the following steps:
+- Remove the command cache database
+```bash
+[ -r "$GCLOUD_CMD_CACHE_DB" ] && rm -i "$GCLOUD_CMD_CACHE_DB"
+```
+- Remove the `source ~/.fzf-gcloud.plugin.zsh` lines from your `zshrc`
+
+### Antigen Uninstallation
+- Remove the command cache database
+```bash
+[ -r "$GCLOUD_CMD_CACHE_DB" ] && rm -i "$GCLOUD_CMD_CACHE_DB"
+```
+- Purge the antigen bundle
+```zsh
+antigen purge mbhynes/fzf-gcloud
+```
+
