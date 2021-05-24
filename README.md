@@ -3,24 +3,26 @@
 ## Summary
 `fzf-gcloud` is a [`zsh`](https://en.wikipedia.org/wiki/Z_shell) script lets you browse the [`gcloud`](https://cloud.google.com/sdk/gcloud/) CLI api with [`fzf`](https://github.com/junegunn/fzf).
 
-![Usage summary](usage_summary.gif)
+It adds a keybinding on `CTRL-P` to browse the currently installed `gcloud` CLI API with `fzf`, to help navigate the many commands quickly:
+![Usage preview](usage_preview.gif)
+
+## Requirements
+- `fzf` (`brew install fzf`)
+- `gcloud` (`brew install --cask google-cloud-sdk`)
+- `sqlite3` (`brew install sqlite`)
 
 ## Installation
 
-### Requirements
-- `fzf` (`brew install fzf`)
-- `gcloud` (`brew install --cask google-cloud-sdk`)
-
-### Manual
-1. Download the shell functions
+### Manual Installation
+1. Download the shell functions from this repo:
 ```zsh
-curl https://github.com/mbhynes/fzf-gcloud/fzf-gcloud.zsh > $HOME/.fzf-gcloud.zsh
+curl https://raw.githubusercontent.com/mbhynes/fzf-gcloud/main/gcloud-fzf.zsh > $HOME/.fzf-gcloud.zsh
 ```
-2. Add the following lines in your `~/.zshrc` to source the functions:
+2. Add the following lines in your `~/.zshrc` to source the functions to source them:
 ```zsh
 [ -f ~/.fzf-gcloud.zsh ] && source ~/.fzf-gcloud.zsh
 ```
-### zsh Packge Managers
+### zsh Packge Manager Installation
 Something like this probably works?
 ```zsh
 zgen load 'mbhynes/fzf-gcloud'
@@ -62,7 +64,19 @@ The local `sqlite` database is populated is a notably not-fancy way:
     , gcloud_cmd_invocation   text
     );
 ```
-There's probably a better way to do this. But this one is very directly understandable, and only takes about a minute to populate  ¯\_(ツ)_/¯.
+- If you're interested, you may browse/update the contents of this cache:
+```bash
+sqlite3 $HOME/.gcloud_cmd_cache.db "select * from gcloud_cmd_cache where gcloud_cmd_invocation like '%alpha%' order by api_source_file limit 5;"
+```
+```
+/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/lib/surface/access_approval/__init__.py|gcloud alpha access-approval
+/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/lib/surface/access_context_manager/cloud_bindings/__init__.py|gcloud alpha access-context-manager cloud-bindings
+/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/lib/surface/access_context_manager/cloud_bindings/create.py|gcloud alpha access-context-manager cloud-bindings create
+/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/lib/surface/access_context_manager/cloud_bindings/update.py|gcloud alpha access-context-manager cloud-bindings update
+/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/lib/surface/admin_service_cluster/__init__.py|gcloud alpha admin-service-cluster
+```
+
+Please note: there's probably a better way to do this. But this works, is very directly understandable, and only takes about a minute to populate ¯\_(ツ)_/¯.
 
 ### Updating the Cache
 There's no magic here. After sourcing the functions, just re-run:
