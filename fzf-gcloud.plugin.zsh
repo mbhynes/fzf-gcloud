@@ -50,11 +50,30 @@ eof
     return 1
   fi
 
-  for api_source_file in $(find "$gcloud_docs_root" -name '*.py'); do
-    cmd=$(sed -e "s:/__init__.py::; s:.py::; s:$gcloud_docs_root::; s:^:gcloud:; s:_:-:g; s:/: :g" <<<"$api_source_file")
-    if grep -q 'ReleaseTrack.BETA' "$api_source_file"; then
+  for api_source_file in $(find "$gcloud_docs_root" -name '*.py' -o -name '*.yaml'); do
+    cmd=$(sed -e "s:/__init__\.py:: ; s:\.yaml:: ; s:\.py:: ; s:$gcloud_docs_root:: ; s:^:gcloud: ; s:_:-:g ; s:/: :g" <<<"$api_source_file")
+    is_alpha=0
+    is_beta=0
+
+    # Determine the release track of the command, to add the `alpha` or `beta` signature
+    if [[ "${api_source_file##*.}" == 'py' ]]; then
+      if grep -q 'ReleaseTrack.BETA' "$api_source_file"; then
+        is_beta=1
+      elif grep -q 'ReleaseTrack.ALPHA' "$api_source_file"; then
+        is_alpha=1
+      fi
+    elif [[ "${api_source_file##*.}" == 'yaml' ]]; then
+      if grep -iq 'release_tracks.*beta' "$api_source_file"; then
+        is_beta=1
+      elif grep -iq 'release_tracks.*alpha' "$api_source_file"; then
+        is_alpha=1
+      fi
+    fi
+
+    # insert the alpha/beta signatures
+    if ((is_beta)); then
       cmd=$(sed -e 's:gcloud:gcloud beta:; s:beta beta: beta:' <<<"$cmd")
-    elif grep -q 'ReleaseTrack.ALPHA' "$api_source_file"; then
+    elif ((is_alpha)); then
       cmd=$(sed -e 's:gcloud:gcloud alpha:; s:alpha alpha:alpha:' <<<"$cmd")
     fi
 
