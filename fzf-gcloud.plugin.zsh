@@ -25,8 +25,8 @@ __gcloud_cmd_cache() {
     echo "Could not find gcloud in PATH; please ensure this is installed." 1>&2
     return 1
   fi
-  # create a staging db to populate 
-  staging_db="$(mktemp -t $(basename "$GCLOUD_CMD_CACHE_DB"))"
+  # create a staging db to populate
+  staging_db="$(mktemp -t $(basename "$GCLOUD_CMD_CACHE_DB").XXXXXX)"
 
   echo "Rebuilding gcloud command cache in '$GCLOUD_CMD_CACHE_DB'" 1>&2
   sqlite3 "$staging_db" <<eof
@@ -48,11 +48,11 @@ eof
   for api_source_file in $(find "$gcloud_docs_root" -name '*.py'); do
     cmd=$(sed -e "s:/__init__.py::; s:.py::; s:$gcloud_docs_root::; s:^:gcloud:; s:_:-:g; s:/: :g" <<<"$api_source_file")
     if grep -q 'ReleaseTrack.BETA' "$api_source_file"; then
-      cmd=$(sed -e 's:gcloud:gcloud beta:; s:beta beta: beta:' <<<"$cmd") 
+      cmd=$(sed -e 's:gcloud:gcloud beta:; s:beta beta: beta:' <<<"$cmd")
     elif grep -q 'ReleaseTrack.ALPHA' "$api_source_file"; then
-      cmd=$(sed -e 's:gcloud:gcloud alpha:; s:alpha alpha:alpha:' <<<"$cmd") 
+      cmd=$(sed -e 's:gcloud:gcloud alpha:; s:alpha alpha:alpha:' <<<"$cmd")
     fi
-  
+
     # Populate the local gcloud command database
     echo "Adding invocation for '$cmd' (build from $api_source_file)" 1>&2
     sqlite3 "$staging_db" "insert into GCLOUD_CMD_CACHE values('$api_source_file', '$cmd');"
@@ -79,8 +79,8 @@ __gcloud_sel() {
 
   if [ ! -r "$GCLOUD_CMD_CACHE_DB" ]; then
     echo "No gcloud command cache db found; trying to repopulate." 1>&2
-    __gcloud_cmd_cache 
-    if [ ! $? ]; then 
+    __gcloud_cmd_cache
+    if [ ! $? ]; then
       echo "An error occurred caching the gcloud api; exiting." 1>&2
       return 1
     fi
