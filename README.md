@@ -3,7 +3,7 @@
 ## Summary
 `fzf-gcloud` is a [`zsh`](https://en.wikipedia.org/wiki/Z_shell) script lets you browse the [`gcloud`](https://cloud.google.com/sdk/gcloud/) CLI api with [`fzf`](https://github.com/junegunn/fzf).
 
-It adds a keybinding on `CTRL-I` (like *I*nformation) to browse the currently installed `gcloud` CLI API with `fzf`, to help navigate the many commands quickly:
+It adds a keybinding on `CTRL-K` (like *cloud* ... meh) to browse the currently installed `gcloud` CLI API with `fzf`, to help navigate the many commands quickly:
 ![Usage preview](usage_preview.gif)
 
 ## Requirements
@@ -27,7 +27,7 @@ Please note that the branch to checkout is `main`, which must be specified in th
 ```
 antigen bundle 'mbhynes/fzf-gcloud' --branch=main
 ```
-The first time you use `CTRL-I`, the `gcloud` command cache will be populated. 
+The first time you use `CTRL-K`, the `gcloud` command cache will be populated. 
 
 Don't panic. 
 
@@ -49,13 +49,13 @@ zgen load 'mbhynes/fzf-gcloud' 'main'
 ```
 
 ### Usage
-- The widget is by default bound to the keybinding `CTRL-I` (`'^I'`)
+- The widget is by default bound to the keybinding `CTRL-K` (`'^K'`)
 - You can alter this by changing the `bindkey` line in the `.fzf-gcloud.plugin.zsh` or `~/.antigen/bundles/mbhynes/fzf-gcloud-main/fzf-gcloud.plugin.zsh` (or wherever you've placed it in your system), as noted below:
 
 ```zsh
 fzf-gcloud-widget() {
   # ==========================================================================
-  # Bind the gcloud fzf helper to CTRL-I
+  # Bind the gcloud fzf helper to CTRL-K
   # ==========================================================================
   LBUFFER="$(__gcloud_sel)"
   local ret=$?
@@ -63,7 +63,7 @@ fzf-gcloud-widget() {
   return $ret
 }
 zle     -N   fzf-gcloud-widget
-bindkey '^I' fzf-gcloud-widget # <--- change if you prefer a different keybinding
+bindkey '^K' fzf-gcloud-widget # <--- change if you prefer a different keybinding
 ```
 
 ## Implementation Details
