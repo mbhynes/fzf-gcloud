@@ -3,7 +3,7 @@
 ## Summary
 `fzf-gcloud` is a [`zsh`](https://en.wikipedia.org/wiki/Z_shell) script lets you browse the [`gcloud`](https://cloud.google.com/sdk/gcloud/) CLI api with [`fzf`](https://github.com/junegunn/fzf).
 
-It adds a keybinding on `CTRL-P` to browse the currently installed `gcloud` CLI API with `fzf`, to help navigate the many commands quickly:
+It adds a keybinding on `CTRL-G` to browse the currently installed `gcloud` CLI API with `fzf`, to help navigate the many commands quickly:
 ![Usage preview](usage_preview.gif)
 
 ## Requirements
@@ -27,7 +27,7 @@ Please note that the branch to checkout is `main`, which must be specified in th
 ```
 antigen bundle 'mbhynes/fzf-gcloud' --branch=main
 ```
-The first time you use `CTRL-P`, the `gcloud` command cache will be populated. 
+The first time you use `CTRL-G`, the `gcloud` command cache will be populated. 
 
 Don't panic. 
 
@@ -38,6 +38,7 @@ Adding invocation for 'gcloud beta sql import csv' (build from /usr/local/Caskro
 Adding invocation for 'gcloud beta sql import sql' (build from /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/lib/surface/sql/import/sql.py)
 Adding invocation for 'gcloud beta sql backups delete' (build from /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/lib/surface/sql/backups/delete.py)
 Adding invocation for 'gcloud beta sql backups describe' (build from /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/lib/surface/sql/backups/describe.py)
+...
 ```
 
 ### Other Packge Manager Installation
@@ -49,13 +50,13 @@ zgen load 'mbhynes/fzf-gcloud' 'main'
 ```
 
 ### Usage
-- The widget is by default bound to the keybinding `CTRL-P` (`'^P'`)
+- The widget is by default bound to the keybinding `CTRL-G` (`'^G'`)
 - You can alter this by changing the `bindkey` line in the `.fzf-gcloud.plugin.zsh` or `~/.antigen/bundles/mbhynes/fzf-gcloud-main/fzf-gcloud.plugin.zsh` (or wherever you've placed it in your system), as noted below:
 
 ```zsh
 fzf-gcloud-widget() {
   # ==========================================================================
-  # Bind the gcloud fzf helper to CTRL-P
+  # Bind the gcloud fzf helper to CTRL-G
   # ==========================================================================
   LBUFFER="$(__gcloud_sel)"
   local ret=$?
@@ -63,7 +64,7 @@ fzf-gcloud-widget() {
   return $ret
 }
 zle     -N   fzf-gcloud-widget
-bindkey '^P' fzf-gcloud-widget # <--- change if you prefer a different keybinding
+bindkey '^G' fzf-gcloud-widget # <--- change if you prefer a different keybinding
 ```
 
 ## Implementation Details

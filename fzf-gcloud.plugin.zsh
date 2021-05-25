@@ -104,7 +104,7 @@ __gcloud_sel() {
 
 fzf-gcloud-widget() {
   # ==========================================================================
-  # Bind the gcloud fzf helper to CTRL-P
+  # Bind the gcloud fzf helper to CTRL-G
   # ==========================================================================
   LBUFFER="$(__gcloud_sel)"
   local ret=$?
@@ -112,7 +112,7 @@ fzf-gcloud-widget() {
   return $ret
 }
 zle     -N   fzf-gcloud-widget
-bindkey '^P' fzf-gcloud-widget
+bindkey '^G' fzf-gcloud-widget
 
 } always {
   eval $__fzf_key_bindings_options
