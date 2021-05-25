@@ -25,8 +25,13 @@ __gcloud_cmd_cache() {
     echo "Could not find gcloud in PATH; please ensure this is installed." 1>&2
     return 1
   fi
+
   # create a staging db to populate
   staging_db="$(mktemp -t $(basename "$GCLOUD_CMD_CACHE_DB").XXXXXX)"
+  if [ ! $? ]; then
+    echo "Error: could not create a temporary staging cachefile." 1>&2
+    return 1
+  fi
 
   echo "Rebuilding gcloud command cache in '$GCLOUD_CMD_CACHE_DB'" 1>&2
   sqlite3 "$staging_db" <<eof
