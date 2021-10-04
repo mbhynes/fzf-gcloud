@@ -7,7 +7,7 @@ It adds a keybinding on `CTRL-K` (like *cloud* ... meh) to browse the currently 
 ![Usage preview](usage_preview.gif)
 
 ## Requirements
-- `fzf` (`brew install fzf`)
+- `fzf` (Please see the instructions [upstream for fzf](https://github.com/junegunn/fzf), but generally: `brew install fzf` & `$(brew --prefix)/opt/fzf/install`)
 - `gcloud` (`brew install --cask google-cloud-sdk`)
 - `sqlite3` (`brew install sqlite`)
 
