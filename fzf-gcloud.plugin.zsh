@@ -42,13 +42,20 @@ __gcloud_cmd_cache() {
     );
 eof
 
-  gcloud_bin_path="$(which gcloud)"
-  gcloud_root=${gcloud_bin_path%%'/bin/gcloud'}
-  gcloud_docs_root="$gcloud_root/lib/surface"
-  if [ ! -d "$gcloud_docs_root" ]; then
-    echo "Could not find a valid gcloud docs folder at: '$gcloud_bin_path'."
-    return 1
-  fi
+# Determine the path to the gcloud binary, resolving any symlinks with realpath
+gcloud_bin_path=$(realpath $(whence -p gcloud))
+
+# Extract the root directory of the gcloud installation
+gcloud_root=$(dirname $(dirname "$gcloud_bin_path"))
+
+# Define the path to the gcloud docs folder
+gcloud_docs_root="$gcloud_root/lib/surface"
+
+# Check if the gcloud docs folder exists
+if [[ ! -d "$gcloud_docs_root" ]]; then
+  echo "Could not find a valid gcloud docs folder at: '$gcloud_docs_root'."
+  return 1
+fi
 
   for api_source_file in $(find "$gcloud_docs_root" -name '*.py' -o -name '*.yaml'); do
     cmd=$(sed -e "s:/__init__\.py:: ; s:\.yaml:: ; s:\.py:: ; s:$gcloud_docs_root:: ; s:^:gcloud: ; s:_:-:g ; s:/: :g" <<<"$api_source_file")
@@ -110,8 +117,9 @@ __gcloud_sel() {
     fi
   fi
 
-  gcloud_bin_path="$(which gcloud)"
-  gcloud_bin_root=${gcloud_bin_path%%'/gcloud'}
+  # Determine the path to the gcloud binary, resolving any symlinks with realpath
+  gcloud_bin_path=$(realpath $(whence -p gcloud))
+  gcloud_bin_root=$(dirname "$gcloud_bin_path")
   if [ -z "$gcloud_bin_root" ]; then
     echo "An error occurred; could not find the gcloud bin directory." 1>&2
     return 1
